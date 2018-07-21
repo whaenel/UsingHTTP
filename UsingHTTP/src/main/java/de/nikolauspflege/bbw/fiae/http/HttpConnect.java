@@ -74,10 +74,10 @@ public class HttpConnect {
         
         
         System.out.println("HTTPS: ------------------------------------------------ " );
-		HttpResponse<String> strResponseS = null;
+		HttpResponse<String> strResponse = null;
 		try {
-			strResponseS = sendHttpsGet(new URI("https://javadeveloperzone.com/java-basic/java-9-features/java-9-module-example/"));
-			//SstrResponseS = sendHttps(new URI("https://javadeveloperzone.com/java-9/java-9-module-example/"));
+			strResponse = sendHttpsGet(new URI("https://javadeveloperzone.com/java-basic/java-9-features/java-9-module-example/"));
+			//strResponse = sendHttps(new URI("https://javadeveloperzone.com/java-9/java-9-module-example/"));
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
