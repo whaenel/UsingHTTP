@@ -1,52 +1,53 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
 
-  <groupId>de.nikolauspflege.bbw.fiae</groupId>
-  <artifactId>http</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
-  <packaging>jar</packaging>
+	<groupId>de.nikolauspflege.bbw.fiae</groupId>
+	<artifactId>http</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<packaging>jar</packaging>
 
-  <name>http</name>
-  <url>http://maven.apache.org</url>
+	<name>http</name>
+	<url>http://maven.apache.org</url>
 
-  <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <maven.compiler.target>10</maven.compiler.target>
-    <maven.compiler.source>10</maven.compiler.source>
-    <java.version>10</java.version>
-	<junit.jupiter.version>5.2.0</junit.jupiter.version>
-	<junit.vintage.version>5.2.0</junit.vintage.version>
-	<junit.compiler.version>3.7.0</junit.compiler.version>
-	<junit.surefire.version>2.21.0</junit.surefire.version>
-	<junit.platform.version>1.2.0</junit.platform.version>
-  </properties>
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<maven.compiler.target>10</maven.compiler.target>
+		<maven.compiler.source>10</maven.compiler.source>
+		<java.version>10</java.version>
+		<junit.jupiter.version>5.2.0</junit.jupiter.version>
+		<junit.vintage.version>5.2.0</junit.vintage.version>
+		<junit.compiler.version>3.7.0</junit.compiler.version>
+		<junit.surefire.version>2.21.0</junit.surefire.version>
+		<junit.platform.version>1.2.0</junit.platform.version>
+	</properties>
 
-  <dependencies>
- 	<dependency>
-		<groupId>org.junit.jupiter</groupId>
-		<artifactId>junit-jupiter-engine</artifactId>
-		<version>${junit.jupiter.version}</version>
-		<scope>test</scope>
-	</dependency>
- 	<dependency>
- 		<groupId>org.junit.vintage</groupId>
- 		<artifactId>junit-vintage-engine</artifactId>
- 		<version>${junit.vintage.version}</version>
- 	</dependency>
-  </dependencies>
-    <build>
-    	<plugins>
+	<dependencies>
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-engine</artifactId>
+			<version>${junit.jupiter.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.junit.vintage</groupId>
+			<artifactId>junit-vintage-engine</artifactId>
+			<version>${junit.vintage.version}</version>
+		</dependency>
+	</dependencies>
+	<build>
+		<plugins>
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>${junit.compiler.version}</version>
 				<configuration>
 					<source>${java.version}</source>
 					<target>${java.version}</target>
-			        <compilerArgs>
-			            <arg>--add-modules</arg>
-			            <arg>jdk.incubator.httpclient</arg>
-			        </compilerArgs>
+					<compilerArgs>
+						<arg>--add-modules</arg>
+						<arg>jdk.incubator.httpclient</arg>
+					</compilerArgs>
 				</configuration>
 			</plugin>
 			<plugin>
@@ -60,15 +61,15 @@
 					</dependency>
 				</dependencies>
 				<configuration>
-		          <useSystemClassLoader>false</useSystemClassLoader>
-		          		<argLine>
-							--add-modules jdk.incubator.httpclient
-						</argLine>
-		          
-		        </configuration>
-				
+					<useSystemClassLoader>false</useSystemClassLoader>
+					<argLine>
+						--add-modules jdk.incubator.httpclient
+					</argLine>
+
+				</configuration>
+
 			</plugin>
-	    </plugins>
-  	</build>
-  
+		</plugins>
+	</build>
+
 </project>
