@@ -11,6 +11,7 @@
 	<name>http</name>
 	<url>http://maven.apache.org</url>
 
+<<<<<<< HEAD
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven.compiler.target>10</maven.compiler.target>
@@ -19,7 +20,21 @@
 		<junit.jupiter.version>5.2.0</junit.jupiter.version>
 		<junit.platform.version>1.2.0</junit.platform.version>
 	</properties>
+=======
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <maven.compiler.target>10</maven.compiler.target>
+    <maven.compiler.source>10</maven.compiler.source>
+    <java.version>10</java.version>
+	<junit.jupiter.version>5.2.0</junit.jupiter.version>
+	<junit.vintage.version>5.2.0</junit.vintage.version>
+	<junit.compiler.version>3.7.0</junit.compiler.version>
+	<junit.surefire.version>2.21.0</junit.surefire.version>
+	<junit.platform.version>1.2.0</junit.platform.version>
+  </properties>
+>>>>>>> branch 'master' of ssh://git@github.com/whaenel/UsingHTTP.git
 
+<<<<<<< HEAD
 	<dependencies>
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
@@ -36,9 +51,26 @@
 	</dependencies>
 	<build>
 		<plugins>
+=======
+  <dependencies>
+ 	<dependency>
+		<groupId>org.junit.jupiter</groupId>
+		<artifactId>junit-jupiter-engine</artifactId>
+		<version>${junit.jupiter.version}</version>
+		<scope>test</scope>
+	</dependency>
+ 	<dependency>
+ 		<groupId>org.junit.vintage</groupId>
+ 		<artifactId>junit-vintage-engine</artifactId>
+ 		<version>${junit.vintage.version}</version>
+ 	</dependency>
+  </dependencies>
+    <build>
+    	<plugins>
+>>>>>>> branch 'master' of ssh://git@github.com/whaenel/UsingHTTP.git
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.7.0</version>
+				<version>${junit.compiler.version}</version>
 				<configuration>
 					<source>${java.version}</source>
 					<target>${java.version}</target>
@@ -50,7 +82,7 @@
 			</plugin>
 			<plugin>
 				<artifactId>maven-surefire-plugin</artifactId>
-				<version>2.21.0</version>
+				<version>${junit.surefire.version}</version>
 				<dependencies>
 					<dependency>
 						<groupId>org.junit.platform</groupId>
