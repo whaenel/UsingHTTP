@@ -9,6 +9,8 @@ import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import org.junit.jupiter.api.AfterAll;
@@ -69,12 +71,23 @@ class ManagedHttpConnectionTest {
 	}
 
 	@Test
-		void testSendHttpsGet() throws URISyntaxException, IOException, InterruptedException {
-		ManagedHTTPConnection con = new ManagedHTTPConnection();
-		HttpResponse<String> resp = con.sendHttpsGet(new URI( "http://localhost:7080"));
-		System.out.println(resp.body());
-		assertTrue(resp.body().contains("MiniServer"), "Word MiniServer not found in response");
-//		fail("Not yet implemented");
-	}
+	void testSendHttpsGet() throws URISyntaxException, IOException, InterruptedException {
+	ManagedHTTPConnection con = new ManagedHTTPConnection();
+	HttpResponse<String> resp = con.sendHttpsGet(new URI( "http://localhost:7080"));
+	System.out.println(resp.body());
+	assertTrue(resp.body().contains("MiniServer"), "Word MiniServer not found in response");
+//	fail("Not yet implemented");
+}
+	@Test
+	void testSetHeader() throws URISyntaxException, IOException, InterruptedException {
+	ManagedHTTPConnection con = new ManagedHTTPConnection();
+	Map<String, String> headers=new HashMap<String, String>();
+	headers.put("HeaderKey", "HeaderValue");
+	con.setHeaders(headers);
+	HttpResponse<String> resp = con.sendHttpsGet(new URI( "http://localhost:7080/headers"));
+	System.out.println(resp.body());
+	assertTrue((resp.body().contains("HeaderKey")||resp.body().contains("Headerkey")), "Word HeaderKey not found in response");
+//	fail("Not yet implemented");
+}
 
 }
