@@ -3,6 +3,7 @@ package de.nikolauspflege.bbw.fiae.http;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.File;
+import java.io.IOException;
 import java.lang.ProcessBuilder.Redirect;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
@@ -23,7 +24,7 @@ import de.nikolauspflege.bbw.fiae.http.server.mini.HeaderHandler;
 import de.nikolauspflege.bbw.fiae.http.server.mini.RootHandler;
 import jdk.incubator.http.HttpResponse;
 
-class HttpConnectTest {
+class ManagedHttpConnectionTest {
 
 	private static ProcessBuilder pb;
 	private static Process process;
@@ -68,9 +69,11 @@ class HttpConnectTest {
 	}
 
 	@Test
-	void testSendHttpsGet() throws URISyntaxException {
-		HttpResponse<String> resp = HttpConnect.sendHttpsGet(new URI( "http://localhost:7080"));
+		void testSendHttpsGet() throws URISyntaxException, IOException, InterruptedException {
+		ManagedHTTPConnection con = new ManagedHTTPConnection();
+		HttpResponse<String> resp = con.sendHttpsGet(new URI( "http://localhost:7080"));
 		System.out.println(resp.body());
+		assertTrue(resp.body().contains("MiniServer"), "Word MiniServer not found in response");
 //		fail("Not yet implemented");
 	}
 
