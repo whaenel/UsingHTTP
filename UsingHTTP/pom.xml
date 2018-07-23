@@ -11,18 +11,8 @@
 	<name>http</name>
 	<url>http://maven.apache.org</url>
 
-<<<<<<< HEAD
-	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<maven.compiler.target>10</maven.compiler.target>
-		<maven.compiler.source>10</maven.compiler.source>
-		<java.version>10</java.version>
-		<junit.jupiter.version>5.2.0</junit.jupiter.version>
-		<junit.platform.version>1.2.0</junit.platform.version>
-	</properties>
-=======
-  <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+   <properties>
+     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.target>10</maven.compiler.target>
     <maven.compiler.source>10</maven.compiler.source>
     <java.version>10</java.version>
@@ -32,26 +22,6 @@
 	<junit.surefire.version>2.21.0</junit.surefire.version>
 	<junit.platform.version>1.2.0</junit.platform.version>
   </properties>
->>>>>>> branch 'master' of ssh://git@github.com/whaenel/UsingHTTP.git
-
-<<<<<<< HEAD
-	<dependencies>
-		<dependency>
-			<groupId>org.junit.jupiter</groupId>
-			<artifactId>junit-jupiter-engine</artifactId>
-			<version>5.2.0</version>
-
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.junit.vintage</groupId>
-			<artifactId>junit-vintage-engine</artifactId>
-			<version>5.2.0</version>
-		</dependency>
-	</dependencies>
-	<build>
-		<plugins>
-=======
   <dependencies>
  	<dependency>
 		<groupId>org.junit.jupiter</groupId>
@@ -67,7 +37,6 @@
   </dependencies>
     <build>
     	<plugins>
->>>>>>> branch 'master' of ssh://git@github.com/whaenel/UsingHTTP.git
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>${junit.compiler.version}</version>
