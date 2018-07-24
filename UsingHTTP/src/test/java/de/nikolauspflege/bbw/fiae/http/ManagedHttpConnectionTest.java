@@ -24,6 +24,7 @@ import com.sun.net.httpserver.HttpServer;
 import de.nikolauspflege.bbw.fiae.http.server.mini.EchoHandler;
 import de.nikolauspflege.bbw.fiae.http.server.mini.HeaderHandler;
 import de.nikolauspflege.bbw.fiae.http.server.mini.RootHandler;
+import jdk.incubator.http.HttpClient;
 import jdk.incubator.http.HttpResponse;
 
 class ManagedHttpConnectionTest {
@@ -88,6 +89,24 @@ class ManagedHttpConnectionTest {
 	System.out.println(resp.body());
 	assertTrue((resp.body().contains("HeaderKey")||resp.body().contains("Headerkey")), "Word HeaderKey not found in response");
 //	fail("Not yet implemented");
-}
+}	
+	@Test
+	void testRunRedirect1() throws URISyntaxException, IOException, InterruptedException {
+		ManagedHTTPConnection con = new ManagedHTTPConnection();
+		HttpResponse<String> resp = con.sendHttpsGet(new URI( "http://localhost:7080/redirect"));
+		System.out.println(resp.body());
+		assertTrue(resp.body().contains("MiniServer"), "Word MiniServer not found in response, redirect not working");
+	//	fail("Not yet implemented");
+	}
+	@Test
+	void testRunRedirect2() throws URISyntaxException, IOException, InterruptedException {
+		ManagedHTTPConnection con = new ManagedHTTPConnection();
+		con.setRedirect(HttpClient.Redirect.NEVER);
+		HttpResponse<String> resp = con.sendHttpsGet(new URI( "http://localhost:7080/redirect"));
+		System.out.println(resp.body());
+		System.out.println(resp.statusCode());
+		assertTrue(resp.statusCode() == 301 , "Status 301 not found, redirect not blocked");
+	//	fail("Not yet implemented");
+	}
 
 }
