@@ -13,6 +13,7 @@ import javax.net.ssl.SSLParameters;
 
 import jdk.incubator.http.HttpClient;
 import jdk.incubator.http.HttpClient.Redirect;
+import jdk.incubator.http.HttpClient.Version;
 import jdk.incubator.http.HttpRequest;
 import jdk.incubator.http.HttpRequest.Builder;
 import jdk.incubator.http.HttpResponse;
@@ -27,6 +28,8 @@ public class ManagedHTTPConnection {
 
 	private Redirect redirect = HttpClient.Redirect.ALWAYS;
 	private Map<String, String> headers = new HashMap<>();
+	private Version httpVersion = HttpClient.Version.HTTP_2;
+	private HttpClient client;
 	/* sample headers
 	 * Accept	text/html,application/xhtml+xml,aplication/xml;q=0.9,*\/*;q=0.8
 	 * Accept-Encoding	gzip, deflate, br
@@ -59,6 +62,9 @@ public class ManagedHTTPConnection {
 		headers.put("Accept-Language", "de,en-US;q=0.8,en;q=0.5");
 		headers.put("Connection", "keep-alive");
 		//headers.put("User-Agent", "Mozilla/5.0 (X11; Linux x86_64…) Gecko/20100101 Firefox/61.0");
+		client = HttpClient.newBuilder()
+      		  .followRedirects(redirect )
+      		  .build();
 		
 	}
 	
@@ -69,14 +75,15 @@ public class ManagedHTTPConnection {
 
 	public void setRedirect(Redirect redirect) {
 		this.redirect = redirect;
+		client = HttpClient.newBuilder()
+	      		  .followRedirects(redirect )
+	      		  .build();
 	}
 
 
 	public HttpResponse<String> sendHttpsGet(URI anUri) throws IOException, InterruptedException{
 		HttpResponse<String> strResponse=null;
-	        HttpClient client = HttpClient.newBuilder()
-	        		  .followRedirects(redirect )
-	        		  .build();
+//	        HttpClient client = HttpClient.newBuilder().followRedirects(redirect ).build();
 	        Builder reqBuilder = HttpRequest.newBuilder().uri(anUri);
 	        Set<Map.Entry<String, String>> entries = headers.entrySet();
 	        
@@ -85,7 +92,7 @@ public class ManagedHTTPConnection {
 	            String value = entry.getValue();
 	            reqBuilder = reqBuilder.setHeader(key, value);
 	        }
-	        HttpRequest request = reqBuilder.GET().build();
+	        HttpRequest request = reqBuilder.version(httpVersion ).GET().build();
 	        //String body handler
 	        strResponse = client.send(request, HttpResponse.BodyHandler.asString());
 	    return strResponse;

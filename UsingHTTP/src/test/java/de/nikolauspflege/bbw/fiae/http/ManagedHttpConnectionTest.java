@@ -23,6 +23,8 @@ import com.sun.net.httpserver.HttpServer;
 
 import de.nikolauspflege.bbw.fiae.http.server.mini.EchoHandler;
 import de.nikolauspflege.bbw.fiae.http.server.mini.HeaderHandler;
+import de.nikolauspflege.bbw.fiae.http.server.mini.RedirectHandler;
+import de.nikolauspflege.bbw.fiae.http.server.mini.RedirectTargetHandler;
 import de.nikolauspflege.bbw.fiae.http.server.mini.RootHandler;
 import jdk.incubator.http.HttpClient;
 import jdk.incubator.http.HttpResponse;
@@ -39,6 +41,8 @@ class ManagedHttpConnectionTest {
 		server.createContext("/", new RootHandler());
 		server.createContext("/header", new HeaderHandler());
 		server.createContext("/echo", new EchoHandler());
+		server.createContext("/redirect",new RedirectHandler());
+		server.createContext("/redirect/target",new RedirectTargetHandler());
 		server.setExecutor(null);
 		server.start();
 		System.out.println("started MiniServer");
@@ -85,7 +89,7 @@ class ManagedHttpConnectionTest {
 	Map<String, String> headers=new HashMap<String, String>();
 	headers.put("HeaderKey", "HeaderValue");
 	con.setHeaders(headers);
-	HttpResponse<String> resp = con.sendHttpsGet(new URI( "http://localhost:7080/headers"));
+	HttpResponse<String> resp = con.sendHttpsGet(new URI( "http://localhost:7080/headers/"));
 	System.out.println(resp.body());
 	assertTrue((resp.body().contains("HeaderKey")||resp.body().contains("Headerkey")), "Word HeaderKey not found in response");
 //	fail("Not yet implemented");
@@ -93,20 +97,38 @@ class ManagedHttpConnectionTest {
 	@Test
 	void testRunRedirect1() throws URISyntaxException, IOException, InterruptedException {
 		ManagedHTTPConnection con = new ManagedHTTPConnection();
-		HttpResponse<String> resp = con.sendHttpsGet(new URI( "http://localhost:7080/redirect"));
+		HttpResponse<String> resp = con.sendHttpsGet(new URI( "http://localhost:7080/redirect/"));
 		System.out.println(resp.body());
-		assertTrue(resp.body().contains("MiniServer"), "Word MiniServer not found in response, redirect not working");
+		assertTrue(resp.body().contains("You have been redirected to here"), "correct redirect response not found");
+
 	//	fail("Not yet implemented");
 	}
 	@Test
 	void testRunRedirect2() throws URISyntaxException, IOException, InterruptedException {
 		ManagedHTTPConnection con = new ManagedHTTPConnection();
+		assertTrue (con.getRedirect() == HttpClient.Redirect.ALWAYS, "initial status of redirect wrong" ) ;
 		con.setRedirect(HttpClient.Redirect.NEVER);
-		HttpResponse<String> resp = con.sendHttpsGet(new URI( "http://localhost:7080/redirect"));
+		assertTrue (con.getRedirect() == HttpClient.Redirect.NEVER, "status of redirect not changed" ) ;
+	}
+	@Test
+	void testRunRedirect3() throws URISyntaxException, IOException, InterruptedException {
+		ManagedHTTPConnection con = new ManagedHTTPConnection();
+		con.setRedirect(HttpClient.Redirect.NEVER);
+		HttpResponse<String> resp = con.sendHttpsGet(new URI( "http://localhost:7080/redirect/"));
 		System.out.println(resp.body());
 		System.out.println(resp.statusCode());
 		assertTrue(resp.statusCode() == 301 , "Status 301 not found, redirect not blocked");
 	//	fail("Not yet implemented");
+	}
+	@Test
+	void testDefaultHeaders() throws URISyntaxException, IOException, InterruptedException {
+		ManagedHTTPConnection con = new ManagedHTTPConnection();
+		HttpResponse<String> resp = con.sendHttpsGet(new URI( "http://localhost:7080/headers"));
+		System.out.println(resp.body());
+		System.out.println(resp.statusCode());
+		assertTrue(resp.body().contains("text/html,application/xhtml+xml,aplication/xml;q=0.9,*\\/*;q=0.8")
+				&&resp.body().contains("de,en-US;q=0.8,en;q=0.5")
+				&&resp.body().contains("keep-alive") , "default headers not found");
 	}
 
 }
