@@ -17,6 +17,7 @@ public class MiniServer {
 			server.createContext("/echo", new EchoHandler());
 			server.createContext("/redirect",new RedirectHandler());
 			server.createContext("/redirect/target",new RedirectTargetHandler());
+			server.createContext("/json",new JsonHandler());
 			server.setExecutor(null);
 			server.start();
 			System.out.println("Server stared on host " + server.getAddress().getHostString() + " and port " + server.getAddress().getPort());

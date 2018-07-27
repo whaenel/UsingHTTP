@@ -23,6 +23,7 @@ import com.sun.net.httpserver.HttpServer;
 
 import de.nikolauspflege.bbw.fiae.http.server.mini.EchoHandler;
 import de.nikolauspflege.bbw.fiae.http.server.mini.HeaderHandler;
+import de.nikolauspflege.bbw.fiae.http.server.mini.JsonHandler;
 import de.nikolauspflege.bbw.fiae.http.server.mini.RedirectHandler;
 import de.nikolauspflege.bbw.fiae.http.server.mini.RedirectTargetHandler;
 import de.nikolauspflege.bbw.fiae.http.server.mini.RootHandler;
@@ -43,6 +44,7 @@ class ManagedHttpConnectionTest {
 		server.createContext("/echo", new EchoHandler());
 		server.createContext("/redirect",new RedirectHandler());
 		server.createContext("/redirect/target",new RedirectTargetHandler());
+		server.createContext("/json",new JsonHandler());
 		server.setExecutor(null);
 		server.start();
 		System.out.println("started MiniServer");
@@ -138,6 +140,15 @@ class ManagedHttpConnectionTest {
 		System.out.println(resp.body());
 		System.out.println(resp.statusCode());
 		assertTrue(resp.body().contains("application/json"), "header value for accept not correct");
+	}
+	@Test
+	void testgetJson() throws URISyntaxException, IOException, InterruptedException {
+		ManagedHTTPConnection con = new ManagedHTTPConnection();
+		con.setHeader("Accept","application/json");
+		HttpResponse<String> resp = con.sendHttpsGet(new URI( "http://localhost:7080/json"));
+		System.out.println(resp.body());
+		System.out.println(resp.statusCode());
+//		assertTrue(resp.body().contains("application/json"), "header value for accept not correct");
 	}
 
 }
