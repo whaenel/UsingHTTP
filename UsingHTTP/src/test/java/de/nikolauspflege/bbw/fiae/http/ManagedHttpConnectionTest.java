@@ -84,7 +84,7 @@ class ManagedHttpConnectionTest {
 //	fail("Not yet implemented");
 }
 	@Test
-	void testSetHeader() throws URISyntaxException, IOException, InterruptedException {
+	void testSetHeaders() throws URISyntaxException, IOException, InterruptedException {
 	ManagedHTTPConnection con = new ManagedHTTPConnection();
 	Map<String, String> headers=new HashMap<String, String>();
 	headers.put("HeaderKey", "HeaderValue");
@@ -129,6 +129,15 @@ class ManagedHttpConnectionTest {
 		assertTrue(resp.body().contains("text/html,application/xhtml+xml,aplication/xml;q=0.9,*\\/*;q=0.8")
 				&&resp.body().contains("de,en-US;q=0.8,en;q=0.5")
 				&&resp.body().contains("keep-alive") , "default headers not found");
+	}
+	@Test
+	void testSetHeader() throws URISyntaxException, IOException, InterruptedException {
+		ManagedHTTPConnection con = new ManagedHTTPConnection();
+		con.setHeader("Accept","application/json");
+		HttpResponse<String> resp = con.sendHttpsGet(new URI( "http://localhost:7080/headers"));
+		System.out.println(resp.body());
+		System.out.println(resp.statusCode());
+		assertTrue(resp.body().contains("application/json"), "header value for accept not correct");
 	}
 
 }

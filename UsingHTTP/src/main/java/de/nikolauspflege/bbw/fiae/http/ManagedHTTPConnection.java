@@ -61,7 +61,7 @@ public class ManagedHTTPConnection {
 		headers.put("Accept", "text/html,application/xhtml+xml,aplication/xml;q=0.9,*\\/*;q=0.8");
 		headers.put("Accept-Language", "de,en-US;q=0.8,en;q=0.5");
 		headers.put("Connection", "keep-alive");
-		//headers.put("User-Agent", "Mozilla/5.0 (X11; Linux x86_64…) Gecko/20100101 Firefox/61.0");
+		headers.put("User-Agent", "Mozilla/5.0 (X11; Linux x86_64; rv:61.0) Gecko/20100101 Firefox/61.0");
 		client = HttpClient.newBuilder()
       		  .followRedirects(redirect )
       		  .build();
@@ -96,6 +96,12 @@ public class ManagedHTTPConnection {
 	        //String body handler
 	        strResponse = client.send(request, HttpResponse.BodyHandler.asString());
 	    return strResponse;
+		
+	}
+
+
+	public void setHeader(String name, String value) {
+		headers.put(name, value);
 		
 	}
 
