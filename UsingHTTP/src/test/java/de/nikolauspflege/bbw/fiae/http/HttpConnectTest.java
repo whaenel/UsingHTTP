@@ -1,4 +1,4 @@
-package de.nikolauspflege.bbw.fiae;
+package de.nikolauspflege.bbw.fiae.http;
 
 import static org.junit.jupiter.api.Assertions.*;
 
