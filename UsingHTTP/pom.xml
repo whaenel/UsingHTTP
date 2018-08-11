@@ -35,6 +35,11 @@
 			<artifactId>junit-vintage-engine</artifactId>
 			<version>${junit.vintage.version}</version>
 		</dependency>
+		<dependency>
+		    <groupId>org.json</groupId>
+		    <artifactId>json</artifactId>
+		    <version>20180130</version>
+		</dependency>
 	</dependencies>
 	<build>
 		<plugins>
@@ -49,6 +54,16 @@
 						<arg>jdk.incubator.httpclient</arg>
 					</compilerArgs>
 				</configuration>
+			</plugin>
+			<plugin>
+        		<groupId>org.apache.maven.plugins</groupId>
+        		<artifactId>maven-site-plugin</artifactId>
+        		<version>3.7.1</version>
+      		</plugin>
+			
+			<plugin>
+				<artifactId>maven-project-info-reports-plugin</artifactId>
+				<version>3.0.0</version>
 			</plugin>
 			<plugin>
 				<artifactId>maven-surefire-plugin</artifactId>

@@ -13,6 +13,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -32,8 +34,6 @@ import jdk.incubator.http.HttpResponse;
 
 class ManagedHttpConnectionTest {
 
-	private static ProcessBuilder pb;
-	private static Process process;
 	private static HttpServer server;
 
 	@BeforeAll
@@ -146,8 +146,19 @@ class ManagedHttpConnectionTest {
 		ManagedHTTPConnection con = new ManagedHTTPConnection();
 		con.setHeader("Accept","application/json");
 		HttpResponse<String> resp = con.sendHttpsGet(new URI( "http://localhost:7080/json"));
-		System.out.println(resp.body());
+		assertEquals(200, resp.statusCode(), "Status code not 200");
 		System.out.println(resp.statusCode());
+		assertNotNull(resp.body(), "no response delivered");
+		System.out.println(resp.body());
+		JSONObject jo = new JSONObject(resp.body());
+		JSONArray jarr = jo.getJSONArray("locations");
+		String stationName = jarr.getJSONObject(0).getString("name");
+		String stationId = jarr.getJSONObject(0).getString("id");
+		System.out.println( " Station Name is: " + stationName);
+		System.out.println( " Station ID is: " + stationId);
+
+		assertEquals("de:08111:6118", stationId, "Station ID not de:08111:6118:1:102");
+		
 //		assertTrue(resp.body().contains("application/json"), "header value for accept not correct");
 	}
 
