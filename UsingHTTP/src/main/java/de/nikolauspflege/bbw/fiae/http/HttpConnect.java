@@ -10,7 +10,7 @@ import jdk.incubator.http.HttpResponse;
 
 public class HttpConnect {
 
-	public static void run(String[] args) {
+	public static void run(String[] args)throws IllegalArgumentException {
 		ManagedHTTPConnection conn = new ManagedHTTPConnection();
 		HttpResponse<String> response =null;
 		URI myUri;
@@ -21,10 +21,11 @@ public class HttpConnect {
 			}
 
 			response = conn.sendHttpsGet(myUri);
-		} catch (IOException | InterruptedException | URISyntaxException e) {
+		} catch (IOException | InterruptedException | URISyntaxException | IllegalArgumentException e) {
 			System.out.println("request failed  " );
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			throw new IllegalArgumentException (e.getMessage());
 		}
 		System.out.println("headers = " + response.headers().toString());
 		System.out.println("length =" + response.body().length());

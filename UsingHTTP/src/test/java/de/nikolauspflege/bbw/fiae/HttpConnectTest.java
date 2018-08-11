@@ -34,5 +34,15 @@ class HttpConnectTest {
 		String[] args = { "http://httpbin.org/get?name=Hugo" };
 		HttpConnect.run(args );
 	}
+	@Test
+	void testMain() {
+		
+		String[] args = { "httpbin.org/get?name=Hugo" };
+	    Throwable exception = assertThrows(IllegalArgumentException.class, () -> HttpConnect.main(args ));
+	    assertEquals("URI with undefined scheme", exception.getMessage());
+
+		
+	
+	}
 
 }
