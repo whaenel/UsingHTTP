@@ -15,12 +15,69 @@ import org.json.JSONObject;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 
-public class JsonHandlerVVSStations implements HttpHandler {
+public class RestHandlerVVSStations extends MethodHandler implements HttpHandler {
+	
+	@Override
+	protected void handleGet(HttpExchange he) {
+		VVSBackend backend = VVSBackend.getInstance();
+		// check for path parameters
+		if ((pathParms == null)&&(parms == null)) {
+			// want all stations
+			response = backend.getLocations().toString();
+		} else if (pathParms != null) {
+			// station addressed by path
+			if (pathParms.length == 1) {
+				String locationId = pathParms[0];
+				JSONObject station = backend.getStationById(locationId);
+				if (station != null) {
+					response = station.toString();
+				} else {
+					rc = 404; // not found
+				}
+			} else {
+				// too many path parts
+				rc=400; // bad Request
+			}
+		} else {
+			// Station addressed by parameter
+			if (parms.containsKey("name")) {
+				String locationName = parms.get("name");
+				if (locationName != null) {
+					JSONObject station = backend.getStationByName(locationName);
+					if (station != null) {
+						response = station.toString();
+					} else {
+						rc = 404; // not found
+					}	
+				}
+			} else {
+				// too many parameters
+				rc=400; // bad Request
+			}
 
+		}
+	}
+
+	@Override
+	protected void handlePost(HttpExchange he) {
+		VVSBackend backend = VVSBackend.getInstance();
+		if (parms.containsKey("locationJSON")) {
+			String stationString = parms.get("locationJSON");
+			JSONObject station = new JSONObject(stationString);
+			backend.addStation(station);
+		} else {
+			// missing parameters
+			rc=400; // bad Request
+		}
+		
+	}
+
+	
+	/*
 	JSONArray stations = new JSONArray();
 	JSONObject locations = new JSONObject();
 	
-	public JsonHandlerVVSStations() {
+	public RestHandlerVVSStations() {
 		super();
 		stations.put(new JSONObject("{\"id\":\"de:08111:6118\",\"isGlobalId\":true,\"name\":\"Stuttgart, Hauptbahnhof (tief)\",\"disassembledName\":\"Hauptbahnhof (tief)\",\"coord\":[48.78298,9.17985],\"type\":\"stop\",\"matchQuality\":0,\"isBest\":false,\"parent\":{\"id\":\"8111000|51\",\"name\":\"Stuttgart\",\"type\":\"locality\"},\"assignedStops\":[{\"id\":\"de:08111:6118\",\"isGlobalId\":true,\"name\":\"Stuttgart Hauptbahnhof (tief)\",\"disassembledName\":\"Hauptbahnhof (tief)\",\"type\":\"stop\",\"coord\":[48.78298,9.17985],\"parent\":{\"name\":\"Stuttgart\",\"type\":\"locality\"},\"modes\":[1],\"connectingMode\":100,\"properties\":{\"stopId\":\"5006118\"}}],\"properties\":{\"stopId\":\"5006118\"},\"downloads\":[{\"type\":\"SM\",\"url\":\"vvs/me_plaene/ME_Hbf.pdf\"},{\"type\":\"SM\",\"url\":\"vvs/uhbf.pdf\",\"size\":1001}]}"));
 		stations.put(new JSONObject("{\"id\":\"de:08111:6056\",\"isGlobalId\":true,\"name\":\"Stuttgart, Stadtmitte\",\"disassembledName\":\"Stadtmitte\",\"coord\":[48.77633,9.17305],\"type\":\"stop\",\"matchQuality\":100000,\"isBest\":false,\"parent\":{\"id\":\"8111000|51\",\"name\":\"Stuttgart\",\"type\":\"locality\"},\"assignedStops\":[{\"id\":\"de:08111:6056\",\"isGlobalId\":true,\"name\":\"Stadtmitte\",\"type\":\"stop\",\"coord\":[48.77633,9.17305],\"parent\":{\"name\":\"Stuttgart\",\"type\":\"locality\"},\"modes\":[1,3,5],\"connectingMode\":100,\"properties\":{\"stopId\":\"5006056\"}}],\"properties\":{\"stopId\":\"5006056\"},\"downloads\":[{\"type\":\"SM\",\"url\":\"vvs/uroteb.pdf\",\"size\":630},{\"type\":\"SM\",\"url\":\"vvs/me_plaene/ME_Roteb.pdf\",\"size\":904}]}"));
@@ -139,7 +196,7 @@ public class JsonHandlerVVSStations implements HttpHandler {
 	        he.sendResponseHeaders(415, 0);
 	        he.close();
 		}
-        
+     */   
 		
 	/*	
 		Class cls = this.getClass();
@@ -152,6 +209,6 @@ public class JsonHandlerVVSStations implements HttpHandler {
 	    os.close();
 	    in.close();
 */
-	}
+	
 
 }

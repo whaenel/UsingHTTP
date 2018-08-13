@@ -15,6 +15,7 @@ import jdk.incubator.http.HttpClient;
 import jdk.incubator.http.HttpClient.Redirect;
 import jdk.incubator.http.HttpClient.Version;
 import jdk.incubator.http.HttpRequest;
+import jdk.incubator.http.HttpRequest.BodyPublisher;
 import jdk.incubator.http.HttpRequest.Builder;
 import jdk.incubator.http.HttpResponse;
 import jdk.incubator.http.HttpResponse.BodyHandler;
@@ -80,10 +81,21 @@ public class ManagedHTTPConnection {
 	      		  .build();
 	}
 
+	private Builder getBuilder(URI anUri) {
+        Builder reqBuilder = HttpRequest.newBuilder().uri(anUri);
+        Set<Map.Entry<String, String>> entries = headers.entrySet();
+        
+        for (Map.Entry<String, String> entry : entries) {
+            String key = entry.getKey();
+            String value = entry.getValue();
+            reqBuilder = reqBuilder.setHeader(key, value);
+        }
+        return reqBuilder.version(httpVersion );
+	}
 
-	public HttpResponse<String> sendHttpsGet(URI anUri) throws IOException, InterruptedException{
+	public HttpResponse<String> sendHttpGet(URI anUri) throws IOException, InterruptedException{
 		HttpResponse<String> strResponse=null;
-//	        HttpClient client = HttpClient.newBuilder().followRedirects(redirect ).build();
+/*	        HttpClient client = HttpClient.newBuilder().followRedirects(redirect ).build();
 	        Builder reqBuilder = HttpRequest.newBuilder().uri(anUri);
 	        Set<Map.Entry<String, String>> entries = headers.entrySet();
 	        
@@ -92,7 +104,39 @@ public class ManagedHTTPConnection {
 	            String value = entry.getValue();
 	            reqBuilder = reqBuilder.setHeader(key, value);
 	        }
-	        HttpRequest request = reqBuilder.version(httpVersion ).GET().build();
+	        HttpRequest request = reqBuilder.version(httpVersion ).GET().build();*/
+			HttpRequest request = getBuilder(anUri).GET().build();
+	        //String body handler
+	        strResponse = client.send(request, HttpResponse.BodyHandler.asString());
+	    return strResponse;
+		
+	}
+	public HttpResponse<String> sendHttpPost(URI anUri, String data) throws IOException, InterruptedException{
+		HttpResponse<String> strResponse=null;
+//	        HttpClient client = HttpClient.newBuilder().followRedirects(redirect ).build();
+	        HttpRequest request = getBuilder(anUri).POST(BodyPublisher.fromString(data)).build();
+	        /*
+	        HttpRequest request = HttpRequest.newBuilder()
+	        		  .uri(new URI("https://postman-echo.com/post"))
+	        		  .headers("Content-Type", "text/plain;charset=UTF-8")
+	        		  .POST(HttpRequest.BodyProcessor.fromString("Sample request body"))
+	        		  .build(); */
+	        //String body handler
+	        strResponse = client.send(request, HttpResponse.BodyHandler.asString());
+	    return strResponse;
+		
+	}
+
+	public HttpResponse<String> sendHttpPut(URI anUri, String data) throws IOException, InterruptedException{
+		HttpResponse<String> strResponse=null;
+//	        HttpClient client = HttpClient.newBuilder().followRedirects(redirect ).build();
+	        HttpRequest request = getBuilder(anUri).PUT(BodyPublisher.fromString(data)).build();
+	        /*
+	        HttpRequest request = HttpRequest.newBuilder()
+	        		  .uri(new URI("https://postman-echo.com/post"))
+	        		  .headers("Content-Type", "text/plain;charset=UTF-8")
+	        		  .POST(HttpRequest.BodyProcessor.fromString("Sample request body"))
+	        		  .build(); */
 	        //String body handler
 	        strResponse = client.send(request, HttpResponse.BodyHandler.asString());
 	    return strResponse;

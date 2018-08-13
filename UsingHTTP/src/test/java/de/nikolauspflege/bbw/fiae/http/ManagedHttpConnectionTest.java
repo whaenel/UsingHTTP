@@ -26,9 +26,13 @@ import com.sun.net.httpserver.HttpServer;
 import de.nikolauspflege.bbw.fiae.http.server.mini.EchoHandler;
 import de.nikolauspflege.bbw.fiae.http.server.mini.HeaderHandler;
 import de.nikolauspflege.bbw.fiae.http.server.mini.JsonHandler;
+import de.nikolauspflege.bbw.fiae.http.server.mini.RestHandlerVVSStations;
 import de.nikolauspflege.bbw.fiae.http.server.mini.RedirectHandler;
 import de.nikolauspflege.bbw.fiae.http.server.mini.RedirectTargetHandler;
 import de.nikolauspflege.bbw.fiae.http.server.mini.RootHandler;
+import de.nikolauspflege.bbw.fiae.http.server.mini.VVSBackend;
+import de.nikolauspflege.bbw.fiae.http.server.mini.VVSPostDisplayHandler;
+import de.nikolauspflege.bbw.fiae.http.server.mini.VVSSelectionHandler;
 import jdk.incubator.http.HttpClient;
 import jdk.incubator.http.HttpResponse;
 
@@ -45,6 +49,9 @@ class ManagedHttpConnectionTest {
 		server.createContext("/redirect",new RedirectHandler());
 		server.createContext("/redirect/target",new RedirectTargetHandler());
 		server.createContext("/json",new JsonHandler());
+		server.createContext("/vvs/api/v1.0/stations",new RestHandlerVVSStations());
+		server.createContext("/vvs", new VVSSelectionHandler()); 
+		server.createContext("/vvs/station", new VVSPostDisplayHandler()); 
 		server.setExecutor(null);
 		server.start();
 		System.out.println("started MiniServer");
@@ -71,6 +78,8 @@ class ManagedHttpConnectionTest {
 
 	@BeforeEach
 	void setUp() throws Exception {
+		System.out.println("==============================================");
+		VVSBackend.getInstance().reset();
 	}
 
 	@AfterEach
@@ -79,27 +88,30 @@ class ManagedHttpConnectionTest {
 
 	@Test
 	void testSendHttpsGet() throws URISyntaxException, IOException, InterruptedException {
-	ManagedHTTPConnection con = new ManagedHTTPConnection();
-	HttpResponse<String> resp = con.sendHttpsGet(new URI( "http://localhost:7080"));
-	System.out.println(resp.body());
-	assertTrue(resp.body().contains("MiniServer"), "Word MiniServer not found in response");
-//	fail("Not yet implemented");
-}
+		ManagedHTTPConnection con = new ManagedHTTPConnection();
+		HttpResponse<String> resp = con.sendHttpGet(new URI( "http://localhost:7080"));
+		System.out.println(resp.body());
+		assertTrue(resp.body().contains("MiniServer"), "Word MiniServer not found in response");
+		resp = con.sendHttpGet(new URI( "http://localhost:7080/a"));
+		System.out.println(resp.body());
+		assertTrue(resp.body().contains("/a not supported"), "/a not  supported - not found in response");
+	//	fail("Not yet implemented");
+	}
 	@Test
-	void testSetHeaders() throws URISyntaxException, IOException, InterruptedException {
-	ManagedHTTPConnection con = new ManagedHTTPConnection();
-	Map<String, String> headers=new HashMap<String, String>();
-	headers.put("HeaderKey", "HeaderValue");
-	con.setHeaders(headers);
-	HttpResponse<String> resp = con.sendHttpsGet(new URI( "http://localhost:7080/headers/"));
-	System.out.println(resp.body());
-	assertTrue((resp.body().contains("HeaderKey")||resp.body().contains("Headerkey")), "Word HeaderKey not found in response");
-//	fail("Not yet implemented");
-}	
+		void testSetHeaders() throws URISyntaxException, IOException, InterruptedException {
+		ManagedHTTPConnection con = new ManagedHTTPConnection();
+		Map<String, String> headers=new HashMap<String, String>();
+		headers.put("HeaderKey", "HeaderValue");
+		con.setHeaders(headers);
+		HttpResponse<String> resp = con.sendHttpGet(new URI( "http://localhost:7080/headers/"));
+		System.out.println(resp.body());
+		assertTrue((resp.body().contains("HeaderKey")||resp.body().contains("Headerkey")), "Word HeaderKey not found in response");
+	//	fail("Not yet implemented");
+	}	
 	@Test
 	void testRunRedirect1() throws URISyntaxException, IOException, InterruptedException {
 		ManagedHTTPConnection con = new ManagedHTTPConnection();
-		HttpResponse<String> resp = con.sendHttpsGet(new URI( "http://localhost:7080/redirect/"));
+		HttpResponse<String> resp = con.sendHttpGet(new URI( "http://localhost:7080/redirect/"));
 		System.out.println(resp.body());
 		assertTrue(resp.body().contains("You have been redirected to here"), "correct redirect response not found");
 
@@ -116,7 +128,7 @@ class ManagedHttpConnectionTest {
 	void testRunRedirect3() throws URISyntaxException, IOException, InterruptedException {
 		ManagedHTTPConnection con = new ManagedHTTPConnection();
 		con.setRedirect(HttpClient.Redirect.NEVER);
-		HttpResponse<String> resp = con.sendHttpsGet(new URI( "http://localhost:7080/redirect/"));
+		HttpResponse<String> resp = con.sendHttpGet(new URI( "http://localhost:7080/redirect/"));
 		System.out.println(resp.body());
 		System.out.println(resp.statusCode());
 		assertTrue(resp.statusCode() == 301 , "Status 301 not found, redirect not blocked");
@@ -125,7 +137,7 @@ class ManagedHttpConnectionTest {
 	@Test
 	void testDefaultHeaders() throws URISyntaxException, IOException, InterruptedException {
 		ManagedHTTPConnection con = new ManagedHTTPConnection();
-		HttpResponse<String> resp = con.sendHttpsGet(new URI( "http://localhost:7080/headers"));
+		HttpResponse<String> resp = con.sendHttpGet(new URI( "http://localhost:7080/headers"));
 		System.out.println(resp.body());
 		System.out.println(resp.statusCode());
 		assertTrue(resp.body().contains("text/html,application/xhtml+xml,aplication/xml;q=0.9,*\\/*;q=0.8")
@@ -136,7 +148,7 @@ class ManagedHttpConnectionTest {
 	void testSetHeader() throws URISyntaxException, IOException, InterruptedException {
 		ManagedHTTPConnection con = new ManagedHTTPConnection();
 		con.setHeader("Accept","application/json");
-		HttpResponse<String> resp = con.sendHttpsGet(new URI( "http://localhost:7080/headers"));
+		HttpResponse<String> resp = con.sendHttpGet(new URI( "http://localhost:7080/headers"));
 		System.out.println(resp.body());
 		System.out.println(resp.statusCode());
 		assertTrue(resp.body().contains("application/json"), "header value for accept not correct");
@@ -145,7 +157,7 @@ class ManagedHttpConnectionTest {
 	void testgetJson() throws URISyntaxException, IOException, InterruptedException {
 		ManagedHTTPConnection con = new ManagedHTTPConnection();
 		con.setHeader("Accept","application/json");
-		HttpResponse<String> resp = con.sendHttpsGet(new URI( "http://localhost:7080/json"));
+		HttpResponse<String> resp = con.sendHttpGet(new URI( "http://localhost:7080/json"));
 		assertEquals(200, resp.statusCode(), "Status code not 200");
 		System.out.println(resp.statusCode());
 		assertNotNull(resp.body(), "no response delivered");
@@ -157,9 +169,53 @@ class ManagedHttpConnectionTest {
 		System.out.println( " Station Name is: " + stationName);
 		System.out.println( " Station ID is: " + stationId);
 
-		assertEquals("de:08111:6118", stationId, "Station ID not de:08111:6118:1:102");
+		assertEquals("de:08111:6118", stationId, "Station ID not de:08111:6118");
 		
 //		assertTrue(resp.body().contains("application/json"), "header value for accept not correct");
 	}
-
+	@Test
+	void testSendHttpsPost() throws URISyntaxException, IOException, InterruptedException {
+		ManagedHTTPConnection con = new ManagedHTTPConnection();
+		HttpResponse<String> resp = con.sendHttpPost(new URI( "http://localhost:7080/vvs/station"), "id=de:08111:6118");
+		System.out.println(resp.body());
+		assertTrue(resp.body().contains("Stuttgart, Hauptbahnhof (tief)"), "\"Stuttgart, Hauptbahnhof (tief)\" not found in response");
+		resp = con.sendHttpPost(new URI( "http://localhost:7080/vvs/station"), "id=de:08111:6056");
+		System.out.println(resp.body());
+		assertTrue(resp.body().contains("Stuttgart, Stadtmitte"), "\"Stuttgart, Stadtmitte\" not found in response");
+	}
+// ======================= Testing VVS Rest API ===========================0
+	@Test
+	void testGetStations() throws URISyntaxException, IOException, InterruptedException {
+		ManagedHTTPConnection con = new ManagedHTTPConnection();
+		HttpResponse<String> resp = con.sendHttpGet(new URI( "http://localhost:7080/vvs/api/v1.0/stations"));
+		System.out.println(resp.body());
+		JSONObject jo = new JSONObject(resp.body());
+		JSONArray jarr = jo.getJSONArray("locations");
+		
+		assertTrue(resp.body().contains("Stuttgart, Hauptbahnhof (tief)"), "\"Stuttgart, Hauptbahnhof (tief)\" not found in response");
+		
+		resp = con.sendHttpGet(new URI( "http://localhost:7080/vvs/api/v1.0/stations/de:08111:6056"));
+		System.out.println(resp.body());
+		assertTrue(resp.body().contains("Stuttgart, Stadtmitte"), "\"Stuttgart, Stadtmitte\" not found in response");
+		
+	}
+	@Test
+	void testPostStations() throws URISyntaxException, IOException, InterruptedException {
+		ManagedHTTPConnection con = new ManagedHTTPConnection();
+		HttpResponse<String> resp = con.sendHttpPost(new URI( "http://localhost:7080/vvs/api/v1.0/stations"), "locationJSON={\"name\":\"Stuttgart, Marienplatz\",\"id\":\"de:08111:4711\"}");
+		System.out.println(resp.statusCode());
+		
+		assertTrue(resp.statusCode() == 200, "no 200 status code");
+		
+		resp = con.sendHttpGet(new URI( "http://localhost:7080/vvs/api/v1.0/stations/de:08111:4711"));
+		System.out.println(resp.body());
+		assertTrue(resp.body().contains("Stuttgart, Marienplatz"), "\"Stuttgart, Marienplatz\" not found in response");
+		// test that we now have 3 entries
+		resp = con.sendHttpGet(new URI( "http://localhost:7080/vvs/api/v1.0/stations"));
+		System.out.println(resp.body());
+		JSONObject jo = new JSONObject(resp.body());
+		JSONArray jarr = jo.getJSONArray("locations");
+		assertEquals(jarr.length(),3, "Array does not hold 3 stations");
+	}
+	
 }

@@ -20,7 +20,7 @@ public class HttpConnect {
 				myUri = new URI(args[0]);
 			}
 
-			response = conn.sendHttpsGet(myUri);
+			response = conn.sendHttpGet(myUri);
 		} catch (IOException | InterruptedException | URISyntaxException | IllegalArgumentException e) {
 			System.out.println("request failed  " );
 			// TODO Auto-generated catch block
