@@ -6,7 +6,7 @@ import com.sun.net.httpserver.HttpHandler;
 public class RootHandler extends MethodHandler implements HttpHandler {
 	
 	@Override
-	protected void handleGet(HttpExchange he) {
+	protected  void handleGet(HttpExchange he) {
 		if (this.pathParms == null) {
 			response = "<!DOCTYPE html>\n" + 
 					"<html lang=\"de\">\n" + 
