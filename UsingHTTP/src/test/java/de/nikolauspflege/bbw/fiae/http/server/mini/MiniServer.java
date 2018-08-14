@@ -23,7 +23,7 @@ public class MiniServer {
 			server.createContext("/vvs/station", new VVSPostDisplayHandler()); 
 			server.setExecutor(null);
 			server.start();
-			System.out.println("Server stared on host " + server.getAddress().getHostString() + " and port " + server.getAddress().getPort());
+			System.out.println("Server started on host " + server.getAddress().getHostString() + ":" + server.getAddress().getPort());
 		} catch (IOException e) {
 			// print stack trace and exit in case of error
 			e.printStackTrace();
