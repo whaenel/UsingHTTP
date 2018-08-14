@@ -15,6 +15,12 @@ public class MiniServer {
 			server.createContext("/", new RootHandler());
 			server.createContext("/header", new HeaderHandler());
 			server.createContext("/echo", new EchoHandler());
+			server.createContext("/redirect",new RedirectHandler());
+			server.createContext("/redirect/target",new RedirectTargetHandler());
+			server.createContext("/json",new JsonHandler());
+			server.createContext("/vvs/api/v1.0/stations",new RestHandlerVVSStations());
+			server.createContext("/vvs", new VVSSelectionHandler()); 
+			server.createContext("/vvs/station", new VVSPostDisplayHandler()); 
 			server.setExecutor(null);
 			server.start();
 			System.out.println("Server started on host " + server.getAddress().getHostString() + ":" + server.getAddress().getPort());
@@ -23,8 +29,6 @@ public class MiniServer {
 			e.printStackTrace();
 			return;
 		}
-		
-		
 		
 	}
 

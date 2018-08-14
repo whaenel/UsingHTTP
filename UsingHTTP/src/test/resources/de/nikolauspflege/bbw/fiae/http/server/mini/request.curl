@@ -1,0 +1,22 @@
+https://www3.vvs.de/mngvvs/XML_DM_REQUEST?SpEncId=0&coordOutputFormat=EPSG:4326&deleteAssignedStops=1&itdDate=20180727&itdTime=2357&limit=40&mode=direct&name_dm=de:08111:6118&outputFormat=rapidJSON&serverInfo=1&type_dm=any&useRealtime=1&version=10.2.2.48
+
+coordOutputFormat	EPSG:4326
+deleteAssignedStops	1
+itdDate	20180727
+itdTime	2357
+limit	40
+mode	direct
+name_dm	de:08111:6118
+outputFormat	rapidJSON
+serverInfo	1
+SpEncId	0
+type_dm	any
+useRealtime	1
+version	10.2.2.48
+
+https://www3.vvs.de/mngvvs/XML_DM_REQUEST?SpEncId=0&coordOutputFormat=EPSG:4326&deleteAssignedStops=1&itdDate=20180727&itdTime=2357&limit=40&mode=direct&name_dm=de:08111:6118&outputFormat=rapidJSON&serverInfo=1&type_dm=any&useRealtime=1&version=10.2.2.48
+
+
+https://www3.vvs.de/mngvvs/XML_DM_REQUEST?SpEncId=0&coordOutputFormat=EPSG:4326&deleteAssignedStops=1&itdDate=20180728&itdTime=0029&limit=40&mode=direct&name_dm=de:08111:6056&outputFormat=rapidJSON&serverInfo=1&type_dm=any&useRealtime=1&version=10.2.2.48
+
+https://www3.vvs.de/mng/#!/XSLT_DM_REQUEST@lines?language=de&deeplink=%7B%22dateTime%22:%7B%22date%22:%2228.07.2018%22,%22dateFormat%22:%22%22,%22time%22:%2200:29%22,%22timeFormat%22:%22%22,%22useRealTime%22:true,%22isDeparture%22:true,%22timeCut%22:%5B%2201:00%22,%2204:00%22%5D,%22timeCutInterval%22:1%7D,%22odvs%22:%7B%22dm%22:%22de:08111:6056%22%7D%7D
