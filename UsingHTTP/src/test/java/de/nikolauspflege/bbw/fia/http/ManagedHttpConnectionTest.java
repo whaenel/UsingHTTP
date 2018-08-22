@@ -1,4 +1,4 @@
-package de.nikolauspflege.bbw.fiae.http;
+package de.nikolauspflege.bbw.fia.http;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -23,16 +23,17 @@ import org.junit.jupiter.api.Test;
 
 import com.sun.net.httpserver.HttpServer;
 
-import de.nikolauspflege.bbw.fiae.http.server.mini.EchoHandler;
-import de.nikolauspflege.bbw.fiae.http.server.mini.HeaderHandler;
-import de.nikolauspflege.bbw.fiae.http.server.mini.JsonHandler;
-import de.nikolauspflege.bbw.fiae.http.server.mini.RestHandlerVVSStations;
-import de.nikolauspflege.bbw.fiae.http.server.mini.RedirectHandler;
-import de.nikolauspflege.bbw.fiae.http.server.mini.RedirectTargetHandler;
-import de.nikolauspflege.bbw.fiae.http.server.mini.RootHandler;
-import de.nikolauspflege.bbw.fiae.http.server.mini.VVSBackend;
-import de.nikolauspflege.bbw.fiae.http.server.mini.VVSPostDisplayHandler;
-import de.nikolauspflege.bbw.fiae.http.server.mini.VVSSelectionHandler;
+import de.nikolauspflege.bbw.fia.http.server.mini.EchoHandler;
+import de.nikolauspflege.bbw.fia.http.server.mini.HeaderHandler;
+import de.nikolauspflege.bbw.fia.http.server.mini.JsonHandler;
+import de.nikolauspflege.bbw.fia.http.server.mini.RedirectHandler;
+import de.nikolauspflege.bbw.fia.http.server.mini.RedirectTargetHandler;
+import de.nikolauspflege.bbw.fia.http.server.mini.RestHandlerVVSStations;
+import de.nikolauspflege.bbw.fia.http.server.mini.RootHandler;
+import de.nikolauspflege.bbw.fia.http.server.mini.VVSBackend;
+import de.nikolauspflege.bbw.fia.http.server.mini.VVSPostDisplayHandler;
+import de.nikolauspflege.bbw.fia.http.server.mini.VVSSelectionHandler;
+import de.nikolauspflege.bbw.fiae.http.ManagedHTTPConnection;
 import jdk.incubator.http.HttpClient;
 import jdk.incubator.http.HttpResponse;
 

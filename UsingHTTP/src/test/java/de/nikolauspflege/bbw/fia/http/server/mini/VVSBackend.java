@@ -1,4 +1,4 @@
-package de.nikolauspflege.bbw.fiae.http.server.mini;
+package de.nikolauspflege.bbw.fia.http.server.mini;
 
 import java.security.InvalidParameterException;
 

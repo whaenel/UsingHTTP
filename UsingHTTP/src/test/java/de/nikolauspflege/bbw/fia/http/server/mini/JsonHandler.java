@@ -1,12 +1,15 @@
-package de.nikolauspflege.bbw.fiae.http.server.mini;
+package de.nikolauspflege.bbw.fia.http.server.mini;
 
+import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.URL;
 
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 
-public class EchoHandler implements HttpHandler {
+public class JsonHandler implements HttpHandler {
 
 	@Override
 	public void handle(HttpExchange he) throws IOException {
@@ -25,10 +28,17 @@ public class EchoHandler implements HttpHandler {
 				"using the method: " + method + "</br>" +
 				"  </body> \n" + 
 				"</html>";
-	    he.sendResponseHeaders(200, response.length());
-	    OutputStream os = he.getResponseBody();
-	    os.write(response.getBytes());
+		
+		
+		Class cls = this.getClass();
+		URL inr =cls.getResource("hbf.json");
+		long size =(new File(inr.getFile())).length();
+		InputStream in = cls.getResourceAsStream("hbf.json");
+		OutputStream os = he.getResponseBody();
+	    he.sendResponseHeaders(200, size);
+		in.transferTo(os);
 	    os.close();
+	    in.close();
 
 	}
 
