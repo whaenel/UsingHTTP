@@ -5,6 +5,7 @@ package de.nikolauspflege.bbw.fiae.http;
 
 import java.io.IOException;
 import java.net.URI;
+import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -30,6 +31,9 @@ public class ManagedHTTPConnection {
 	private Redirect redirect = HttpClient.Redirect.ALWAYS;
 	private Map<String, String> headers = new HashMap<>();
 	private Version httpVersion = HttpClient.Version.HTTP_2;
+	private Duration defaultConnectionTimeout = Duration.ofMinutes(5);
+
+
 	private HttpClient client;
 	/* sample headers
 	 * Accept	text/html,application/xhtml+xml,aplication/xml;q=0.9,*\/*;q=0.8
@@ -54,6 +58,14 @@ public class ManagedHTTPConnection {
 		this.headers = headers;
 	}
 
+	public Duration getDefaultConnectionTimeout() {
+		return defaultConnectionTimeout;
+	}
+
+
+	public void setDefaultConnectionTimeout(Duration defaultConnectionTimeout) {
+		this.defaultConnectionTimeout = defaultConnectionTimeout;
+	}
 
 	/**
 	 * 
@@ -68,6 +80,7 @@ public class ManagedHTTPConnection {
       		  .build();
 		
 	}
+	
 	
 	
 	public Redirect getRedirect() {
@@ -93,51 +106,39 @@ public class ManagedHTTPConnection {
         return reqBuilder.version(httpVersion );
 	}
 
+	// GET
 	public HttpResponse<String> sendHttpGet(URI anUri) throws IOException, InterruptedException{
-		HttpResponse<String> strResponse=null;
-/*	        HttpClient client = HttpClient.newBuilder().followRedirects(redirect ).build();
-	        Builder reqBuilder = HttpRequest.newBuilder().uri(anUri);
-	        Set<Map.Entry<String, String>> entries = headers.entrySet();
-	        
-	        for (Map.Entry<String, String> entry : entries) {
-	            String key = entry.getKey();
-	            String value = entry.getValue();
-	            reqBuilder = reqBuilder.setHeader(key, value);
-	        }
-	        HttpRequest request = reqBuilder.version(httpVersion ).GET().build();*/
-			HttpRequest request = getBuilder(anUri).GET().build();
-	        //String body handler
-	        strResponse = client.send(request, HttpResponse.BodyHandler.asString());
-	    return strResponse;
-		
-	}
-	public HttpResponse<String> sendHttpPost(URI anUri, String data) throws IOException, InterruptedException{
-		HttpResponse<String> strResponse=null;
-//	        HttpClient client = HttpClient.newBuilder().followRedirects(redirect ).build();
-	        HttpRequest request = getBuilder(anUri).POST(BodyPublisher.fromString(data)).build();
-	        /*
-	        HttpRequest request = HttpRequest.newBuilder()
-	        		  .uri(new URI("https://postman-echo.com/post"))
-	        		  .headers("Content-Type", "text/plain;charset=UTF-8")
-	        		  .POST(HttpRequest.BodyProcessor.fromString("Sample request body"))
-	        		  .build(); */
-	        //String body handler
-	        strResponse = client.send(request, HttpResponse.BodyHandler.asString());
-	    return strResponse;
-		
+		return sendHttpGet(anUri,defaultConnectionTimeout);
 	}
 
-	public HttpResponse<String> sendHttpPut(URI anUri, String data) throws IOException, InterruptedException{
+	public HttpResponse<String> sendHttpGet(URI anUri, Duration connectionTimeout) throws IOException, InterruptedException{
 		HttpResponse<String> strResponse=null;
-//	        HttpClient client = HttpClient.newBuilder().followRedirects(redirect ).build();
-	        HttpRequest request = getBuilder(anUri).PUT(BodyPublisher.fromString(data)).build();
-	        /*
-	        HttpRequest request = HttpRequest.newBuilder()
-	        		  .uri(new URI("https://postman-echo.com/post"))
-	        		  .headers("Content-Type", "text/plain;charset=UTF-8")
-	        		  .POST(HttpRequest.BodyProcessor.fromString("Sample request body"))
-	        		  .build(); */
+			HttpRequest request = getBuilder(anUri).GET().timeout(connectionTimeout).build();
 	        //String body handler
+	        strResponse = client.send(request, HttpResponse.BodyHandler.asString());
+	    return strResponse;
+		
+	}
+	// POST
+	public HttpResponse<String> sendHttpPost(URI anUri, String data) throws IOException, InterruptedException{
+		return sendHttpPost(anUri, data, defaultConnectionTimeout);
+	}
+
+	public HttpResponse<String> sendHttpPost(URI anUri, String data, Duration connectionTimeout) throws IOException, InterruptedException{
+		HttpResponse<String> strResponse=null;
+	        HttpRequest request = getBuilder(anUri).POST(BodyPublisher.fromString(data)).timeout(connectionTimeout).build();
+	        strResponse = client.send(request, HttpResponse.BodyHandler.asString());
+	    return strResponse;
+		
+	}
+	// PUT
+	public HttpResponse<String> sendHttpPut(URI anUri, String data) throws IOException, InterruptedException{
+		return sendHttpPut(anUri, data, defaultConnectionTimeout);
+	}
+
+	public HttpResponse<String> sendHttpPut(URI anUri, String data, Duration connectionTimeout) throws IOException, InterruptedException{
+		HttpResponse<String> strResponse=null;
+	        HttpRequest request = getBuilder(anUri).PUT(BodyPublisher.fromString(data)).timeout(connectionTimeout).build();
 	        strResponse = client.send(request, HttpResponse.BodyHandler.asString());
 	    return strResponse;
 		
